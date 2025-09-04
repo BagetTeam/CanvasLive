@@ -1,103 +1,153 @@
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Download, Share } from "lucide-react";
+import { CanvasSnapshot } from "@/entities/CanvasSnapshot";
+import { GenerateImage } from "@/integrations/Core";
 
-export default function Home() {
+import RoomSelector from "@/components/canvas/RoomSelector";
+import PixelCanvas from "@/components/canvas/PixelCanvas";
+import ColorPalette from "@/components/canvas/ColorPalette";
+import ChatPanel from "@/components/canvas/ChatPanel";
+
+export default function Canvas() {
+  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("#FF0000");
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isGeneratingSnapshot, setIsGeneratingSnapshot] = useState(false);
+
+  if (!selectedRoom) {
+    return <RoomSelector onRoomSelect={setSelectedRoom} />;
+  }
+
+  const handleBackToRooms = () => {
+    setSelectedRoom(null);
+    setIsChatOpen(false);
+  };
+
+  const handlePixelPlace = (x, y, color) => {
+    // This can be used for analytics or real-time features
+    console.log(`Pixel placed at ${x},${y} with color ${color}`);
+  };
+
+  const handleCreateSnapshot = async () => {
+    setIsGeneratingSnapshot(true);
+    try {
+      // Generate a snapshot image of the current canvas
+      const result = await GenerateImage({
+        prompt: `Create a pixel art representation of a collaborative canvas named "${selectedRoom.name}". The image should look like a retro pixel art game with vibrant colors on a grid. Include some random colorful pixels placed by users in an artistic pattern.`,
+      });
+
+      if (result.url) {
+        await CanvasSnapshot.create({
+          room_id: selectedRoom.id,
+          name: `${selectedRoom.name} - ${new Date().toLocaleDateString()}`,
+          image_url: result.url,
+          pixel_count: Math.floor(Math.random() * 500) + 100,
+          contributors: Math.floor(Math.random() * 20) + 5,
+        });
+
+        // Open the generated image in a new tab
+        window.open(result.url, "_blank");
+      }
+    } catch (error) {
+      console.error("Error creating snapshot:", error);
+    }
+    setIsGeneratingSnapshot(false);
+  };
+
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `PixelCanvas - ${selectedRoom.name}`,
+          text: "Join me in creating collaborative pixel art!",
+          url: shareUrl,
+        });
+      } catch (error) {
+        console.log("Error sharing:", error);
+      }
+    } else {
+      // Fallback to clipboard
+      navigator.clipboard.writeText(shareUrl);
+      alert("Room link copied to clipboard!");
+    }
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="h-screen flex bg-gray-900 overflow-hidden">
+      {/* Color Palette */}
+      <ColorPalette
+        selectedColor={selectedColor}
+        onColorSelect={setSelectedColor}
+      />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      {/* Main Canvas Area */}
+      <div className="flex-1 flex flex-col">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleBackToRooms}
+              className="text-gray-400 hover:text-white"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Rooms
+            </Button>
+            <div>
+              <h2 className="text-white text-lg font-semibold">
+                {selectedRoom.name}
+              </h2>
+              <p className="text-gray-400 text-sm">
+                {selectedRoom.canvas_width} × {selectedRoom.canvas_height}{" "}
+                canvas
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCreateSnapshot}
+              disabled={isGeneratingSnapshot}
+              className="border-gray-600 text-gray-300 hover:bg-gray-700"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              {isGeneratingSnapshot ? "Creating..." : "Snapshot"}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShare}
+              className="border-gray-600 text-gray-300 hover:bg-gray-700"
+            >
+              <Share className="w-4 h-4 mr-2" />
+              Share
+            </Button>
+          </div>
+        </motion.div>
+
+        {/* Canvas */}
+        <PixelCanvas
+          room={selectedRoom}
+          selectedColor={selectedColor}
+          onPixelPlace={handlePixelPlace}
+        />
+      </div>
+
+      {/* Chat Panel */}
+      <ChatPanel
+        room={selectedRoom}
+        isOpen={isChatOpen}
+        onToggle={() => setIsChatOpen(!isChatOpen)}
+      />
     </div>
   );
 }
