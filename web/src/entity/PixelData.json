@@ -1,0 +1,27 @@
+{
+  "name": "PixelData",
+  "type": "object",
+  "properties": {
+    "room_id": {
+      "type": "string",
+      "description": "ID of the room this pixel belongs to"
+    },
+    "x": {
+      "type": "number",
+      "description": "X coordinate on the canvas"
+    },
+    "y": {
+      "type": "number",
+      "description": "Y coordinate on the canvas"
+    },
+    "color": {
+      "type": "string",
+      "description": "Hex color code of the pixel"
+    },
+    "placed_by": {
+      "type": "string",
+      "description": "Email of user who placed this pixel"
+    }
+  },
+  "required": ["room_id", "x", "y", "color"]
+}

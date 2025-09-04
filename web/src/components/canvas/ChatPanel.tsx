@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, MessageSquare } from "lucide-react";
 
+type ChatPanelPayload = {
+    room: 
+}
+
 export default function ChatPanel({ room, isOpen, onToggle }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");

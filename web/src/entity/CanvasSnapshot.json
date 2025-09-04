@@ -1,0 +1,27 @@
+{
+  "name": "CanvasSnapshot",
+  "type": "object",
+  "properties": {
+    "room_id": {
+      "type": "string",
+      "description": "ID of the room this snapshot belongs to"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the snapshot"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "URL to the snapshot image"
+    },
+    "pixel_count": {
+      "type": "number",
+      "description": "Total number of pixels in this snapshot"
+    },
+    "contributors": {
+      "type": "number",
+      "description": "Number of unique contributors"
+    }
+  },
+  "required": ["room_id", "name"]
+}
