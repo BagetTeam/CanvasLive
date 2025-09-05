@@ -14,7 +14,7 @@ export default function ChatPanel({
   isOpen,
   onToggle,
 }: ChatPanelPayload) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,12 +23,12 @@ export default function ChatPanel({
 
   useEffect(() => {
     const getUser = async () => {
-      try {
-        const currentUser = await User.me();
-        setUser(currentUser);
-      } catch (error) {
-        console.error("Error getting user:", error);
-      }
+      // try {
+      //   const currentUser = await User.me();
+      //   setUser(currentUser);
+      // } catch (error) {
+      //   console.error("Error getting user:", error);
+      // }
     };
     getUser();
   }, []);
@@ -38,50 +38,50 @@ export default function ChatPanel({
     if (!room?.id || !isOpen) return;
 
     const loadMessages = async () => {
-      try {
-        const roomMessages = await ChatMessage.filter(
-          { room_id: room.id },
-          "-created_date",
-          50
-        );
-        setMessages(roomMessages.reverse());
-      } catch (error) {
-        console.error("Error loading messages:", error);
-      }
+      // try {
+      //   const roomMessages = await ChatMessage.filter(
+      //     { room_id: room.id },
+      //     "-created_date",
+      //     50
+      //   );
+      //   setMessages(roomMessages.reverse());
+      // } catch (error) {
+      //   console.error("Error loading messages:", error);
+      // }
     };
 
     loadMessages();
 
     // Poll for new messages every 3 seconds
-    pollingRef.current = setInterval(loadMessages, 3000);
+    // pollingRef.current = setInterval(loadMessages, 3000);
 
     return () => {
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-      }
+      // if (pollingRef.current) {
+      //   clearInterval(pollingRef.current);
+      // }
     };
   }, [room?.id, isOpen]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!newMessage.trim() || !room?.id || !user || isLoading) return;
-
-    setIsLoading(true);
-    try {
-      await ChatMessage.create({
-        room_id: room.id,
-        message: newMessage.trim(),
-        sender_name: user.full_name || user.email,
-      });
-      setNewMessage("");
-    } catch (error) {
-      console.error("Error sending message:", error);
-    }
-    setIsLoading(false);
+  const handleSendMessage = async (e: string) => {
+    return e;
+    // e.preventDefault();
+    // if (!newMessage.trim() || !room?.id || !user || isLoading) return;
+    // setIsLoading(true);
+    // try {
+    //   await ChatMessage.create({
+    //     room_id: room.id,
+    //     message: newMessage.trim(),
+    //     sender_name: user.full_name || user.email,
+    //   });
+    //   setNewMessage("");
+    // } catch (error) {
+    //   console.error("Error sending message:", error);
+    // }
+    // setIsLoading(false);
   };
 
   return (
@@ -135,19 +135,19 @@ export default function ChatPanel({
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <div className="w-6 h-6 bg-cyan-500 rounded-full flex items-center justify-center text-xs font-semibold text-white">
-                      {message.sender_name?.[0]?.toUpperCase()}
+                      {message.sender?.[0]?.toUpperCase()}
                     </div>
                     <span className="text-cyan-400 text-sm font-medium">
-                      {message.sender_name}
+                      {message.sender}
                     </span>
                     <span className="text-gray-400 text-xs ml-auto">
-                      {new Date(message.created_date).toLocaleTimeString([], {
+                      {new Date(message.date).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
                     </span>
                   </div>
-                  <p className="text-gray-100 text-sm">{message.message}</p>
+                  <p className="text-gray-100 text-sm">{message.content}</p>
                 </motion.div>
               ))}
               <div ref={messagesEndRef} />

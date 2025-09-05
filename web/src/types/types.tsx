@@ -8,3 +8,10 @@ type User = {
   id: string;
   name: string;
 };
+
+type Message = {
+  id: string;
+  content: string;
+  sender: string;
+  date: Date;
+};
