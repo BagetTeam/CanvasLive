@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Room } from "@/entities/Room.json";
 import { Button, Input } from "@radix-ui/themes";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@heroui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -11,17 +10,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, Users, Palette } from "lucide-react";
+import { Room } from "@/types/types";
+import { defaultRoom } from "@/types/consts";
 
-export default function RoomSelector({ onRoomSelect }) {
+export default function RoomSelector() {
   const [rooms, setRooms] = useState([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [newRoom, setNewRoom] = useState({
-    name: "",
-    description: "",
-    canvas_width: 100,
-    canvas_height: 100,
-  });
+  const [newRoom, setNewRoom] = useState<Room>(defaultRoom);
+
+  function onRoomSelect() {}
 
   useEffect(() => {
     loadRooms();
@@ -171,7 +169,7 @@ export default function RoomSelector({ onRoomSelect }) {
               <label className="text-sm text-gray-300 mb-1 block">
                 Room Name
               </label>
-              <Input
+              <input
                 value={newRoom.name}
                 onChange={(e) =>
                   setNewRoom((prev) => ({ ...prev, name: e.target.value }))
@@ -185,7 +183,7 @@ export default function RoomSelector({ onRoomSelect }) {
               <label className="text-sm text-gray-300 mb-1 block">
                 Description (optional)
               </label>
-              <Textarea
+              <textarea
                 value={newRoom.description}
                 onChange={(e) =>
                   setNewRoom((prev) => ({
@@ -203,7 +201,7 @@ export default function RoomSelector({ onRoomSelect }) {
                 <label className="text-sm text-gray-300 mb-1 block">
                   Width
                 </label>
-                <Input
+                <input
                   type="number"
                   min="50"
                   max="200"
@@ -221,7 +219,7 @@ export default function RoomSelector({ onRoomSelect }) {
                 <label className="text-sm text-gray-300 mb-1 block">
                   Height
                 </label>
-                <Input
+                <input
                   type="number"
                   min="50"
                   max="200"
