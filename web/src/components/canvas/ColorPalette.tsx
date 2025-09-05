@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { COLORS } from "@/types/consts";
+import { COLORS } from "@/consts";
 
 type ColorPalettePayload = {
   selectedColor: string;

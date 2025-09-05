@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@radix-ui/themes";
 import { Send, MessageSquare } from "lucide-react";
+import { Input } from "../ui/input";
 
 type ChatPanelPayload = {
   room: Room;
@@ -160,7 +161,7 @@ export default function ChatPanel({
               className="p-4 border-t border-gray-700"
             >
               <div className="flex gap-2">
-                <input
+                <Input
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   placeholder="Type a message..."

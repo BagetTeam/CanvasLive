@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button, Input } from "@radix-ui/themes";
+import { Button } from "@/components/ui/button";
+import { Input } from "../ui/input";
 import { Textarea } from "@heroui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -10,8 +11,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, Users, Palette } from "lucide-react";
-import { Room } from "@/types/types";
-import { defaultRoom } from "@/types/consts";
+import { Room } from "@/types";
+import { defaultRoom } from "@/consts";
 
 export default function RoomSelector() {
   const [rooms, setRooms] = useState([]);
@@ -169,7 +170,7 @@ export default function RoomSelector() {
               <label className="text-sm text-gray-300 mb-1 block">
                 Room Name
               </label>
-              <input
+              <Input
                 value={newRoom.name}
                 onChange={(e) =>
                   setNewRoom((prev) => ({ ...prev, name: e.target.value }))
@@ -201,11 +202,11 @@ export default function RoomSelector() {
                 <label className="text-sm text-gray-300 mb-1 block">
                   Width
                 </label>
-                <input
+                <Input
                   type="number"
                   min="50"
                   max="200"
-                  value={newRoom.canvas_width}
+                  value={newRoom.canvas.width}
                   onChange={(e) =>
                     setNewRoom((prev) => ({
                       ...prev,
@@ -219,11 +220,11 @@ export default function RoomSelector() {
                 <label className="text-sm text-gray-300 mb-1 block">
                   Height
                 </label>
-                <input
+                <Input
                   type="number"
                   min="50"
                   max="200"
-                  value={newRoom.canvas_height}
+                  value={newRoom.canvas.height}
                   onChange={(e) =>
                     setNewRoom((prev) => ({
                       ...prev,

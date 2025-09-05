@@ -1,4 +1,4 @@
-import { Room } from "@/types/types";
+import { Room } from "@/types";
 import React, { useState, useRef, useEffect, useCallback } from "react";
 
 type PixelCanvasPayload = {
