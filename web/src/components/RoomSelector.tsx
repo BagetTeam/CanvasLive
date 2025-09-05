@@ -14,13 +14,15 @@ import { Plus, Users, Palette } from "lucide-react";
 import { Room } from "@/types";
 import { defaultRoom } from "@/consts";
 
-export default function RoomSelector() {
+type RoomSelectorPayload = {
+  setSelectedRoom: React.Dispatch<React.SetStateAction<null>>;
+};
+
+export default function RoomSelector({ setSelectedRoom }: RoomSelectorPayload) {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [newRoom, setNewRoom] = useState<Room>(defaultRoom);
-
-  function onRoomSelect(room: Room) {}
 
   useEffect(() => {
     loadRooms();

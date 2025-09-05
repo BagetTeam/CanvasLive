@@ -15,7 +15,7 @@ export default function Canvas() {
   const [isGeneratingSnapshot, setIsGeneratingSnapshot] = useState(false);
 
   if (!selectedRoom) {
-    return <RoomSelector onRoomSelect={setSelectedRoom} />;
+    return <RoomSelector setSelectedRoom={setSelectedRoom} />;
   }
 
   const handleBackToRooms = () => {
