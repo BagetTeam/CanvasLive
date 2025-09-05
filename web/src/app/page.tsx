@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@radix-ui/themes";
 import { ArrowLeft, Download, Share } from "lucide-react";
-import { CanvasSnapshot } from "@/entities/CanvasSnapshot";
-import { GenerateImage } from "@/integrations/Core";
 
 import RoomSelector from "@/components/canvas/RoomSelector";
 import PixelCanvas from "@/components/canvas/PixelCanvas";

@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChatMessage } from "@/entities/ChatMessage.json";
-import { User } from "@/entities/User";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@radix-ui/themes";
 import { Send, MessageSquare } from "lucide-react";
 
 type ChatPanelPayload = {
-    room: 
-}
+  room: Room;
+  isOpen: boolean;
+  onToggle: boolean;
+};
 
-export default function ChatPanel({ room, isOpen, onToggle }) {
+export default function ChatPanel({
+  room,
+  isOpen,
+  onToggle,
+}: ChatPanelPayload) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [user, setUser] = useState(null);
