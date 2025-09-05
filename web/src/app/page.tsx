@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import { Button } from "@radix-ui/themes";
 import { ArrowLeft, Download, Share } from "lucide-react";
 import { CanvasSnapshot } from "@/entities/CanvasSnapshot";
 import { GenerateImage } from "@/integrations/Core";
