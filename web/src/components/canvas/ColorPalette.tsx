@@ -1,52 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { COLORS } from "@/types/consts";
 
-const COLORS = [
-  "#FF0000",
-  "#FF8000",
-  "#FFFF00",
-  "#80FF00",
-  "#00FF00",
-  "#00FF80",
-  "#00FFFF",
-  "#0080FF",
-  "#0000FF",
-  "#8000FF",
-  "#FF00FF",
-  "#FF0080",
-  "#FFFFFF",
-  "#C0C0C0",
-  "#808080",
-  "#404040",
-  "#000000",
-  "#800000",
-  "#808000",
-  "#008000",
-  "#008080",
-  "#000080",
-  "#800080",
-  "#8B4513",
-  "#FF69B4",
-  "#FF1493",
-  "#DC143C",
-  "#B22222",
-  "#FA8072",
-  "#FFA500",
-  "#FFD700",
-  "#ADFF2F",
-  "#32CD32",
-  "#00FA9A",
-  "#40E0D0",
-  "#1E90FF",
-  "#9370DB",
-  "#BA55D3",
-  "#DDA0DD",
-  "#F0E68C",
-  "#E6E6FA",
-  "#FFF8DC",
-];
+type ColorPalettePayload = {
+  selectedColor: string;
+};
 
-export default function ColorPalette({ selectedColor, onColorSelect }) {
+export default function ColorPalette({ selectedColor }: ColorPalettePayload) {
+  function onColorSelect(color: string) {
+    // handle color change
+  }
   return (
     <div className="bg-gray-800 border-r border-gray-700 p-4 w-20 flex flex-col">
       <h3 className="text-white text-sm font-semibold mb-4 text-center">
