@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { Button } from "@radix-ui/themes";
 import { ArrowLeft, Download, Share } from "lucide-react";
 
-import RoomSelector from "@/components/canvas/RoomSelector";
-import PixelCanvas from "@/components/canvas/PixelCanvas";
-import ColorPalette from "@/components/canvas/ColorPalette";
-import ChatPanel from "@/components/canvas/ChatPanel";
+import RoomSelector from "@/components/RoomSelector";
+import PixelCanvas from "@/components/PixelCanvas";
+import ColorPalette from "@/components/ColorPalette";
+import ChatPanel from "@/components/ChatPanel";
 
 export default function Canvas() {
   const [selectedRoom, setSelectedRoom] = useState(null);

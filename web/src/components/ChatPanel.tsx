@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@radix-ui/themes";
 import { Send, MessageSquare } from "lucide-react";
-import { Input } from "../ui/input";
+import { Input } from "./ui/input";
+import { Message, Room } from "@/types";
 
 type ChatPanelPayload = {
   room: Room;
