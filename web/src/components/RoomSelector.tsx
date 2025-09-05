@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@heroui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -15,12 +15,12 @@ import { Room } from "@/types";
 import { defaultRoom } from "@/consts";
 
 export default function RoomSelector() {
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [newRoom, setNewRoom] = useState<Room>(defaultRoom);
 
-  function onRoomSelect() {}
+  function onRoomSelect(room: Room) {}
 
   useEffect(() => {
     loadRooms();
@@ -28,33 +28,33 @@ export default function RoomSelector() {
 
   const loadRooms = async () => {
     setIsLoading(true);
-    try {
-      const roomList = await Room.list("-created_date");
-      setRooms(roomList);
-    } catch (error) {
-      console.error("Error loading rooms:", error);
-    }
+    // try {
+    //   const roomList = await Room.list("-created_date");
+    //   setRooms(roomList);
+    // } catch (error) {
+    //   console.error("Error loading rooms:", error);
+    // }
     setIsLoading(false);
   };
 
-  const handleCreateRoom = async (e) => {
+  const handleCreateRoom = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newRoom.name.trim()) return;
+    // if (!newRoom.name.trim()) return;
 
-    try {
-      const created = await Room.create(newRoom);
-      setRooms((prev) => [created, ...prev]);
-      setShowCreateDialog(false);
-      setNewRoom({
-        name: "",
-        description: "",
-        canvas_width: 100,
-        canvas_height: 100,
-      });
-      onRoomSelect(created);
-    } catch (error) {
-      console.error("Error creating room:", error);
-    }
+    // try {
+    //   const created = await Room.create(newRoom);
+    //   setRooms((prev) => [created, ...prev]);
+    //   setShowCreateDialog(false);
+    //   setNewRoom({
+    //     name: "",
+    //     description: "",
+    //     canvas_width: 100,
+    //     canvas_height: 100,
+    //   });
+    //   onRoomSelect(created);
+    // } catch (error) {
+    //   console.error("Error creating room:", error);
+    // }
   };
 
   if (isLoading) {
@@ -126,14 +126,14 @@ export default function RoomSelector() {
                     <div className="flex items-center justify-between text-xs text-gray-400">
                       <span className="flex items-center gap-1">
                         <Users className="w-3 h-3" />
-                        {room.participant_count || 0} online
+                        {room.participants || 0} online
                       </span>
                       <span>
-                        {room.canvas_width}×{room.canvas_height}
+                        {room.canvas.width}×{room.canvas.height}
                       </span>
                     </div>
                     <div className="text-xs text-gray-500 mt-2">
-                      Created {new Date(room.created_date).toLocaleDateString()}
+                      Created {room.date?.toLocaleDateString() || "Unknown"}
                     </div>
                   </CardContent>
                 </Card>

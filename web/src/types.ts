@@ -8,6 +8,8 @@ export type Room = {
   name: string;
   description: string;
   canvas: Canvas;
+  participants: number; // can be changed to user list
+  date: Date;
 };
 
 export type User = {

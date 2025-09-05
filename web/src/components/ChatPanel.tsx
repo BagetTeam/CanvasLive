@@ -8,14 +8,9 @@ import { Message, Room } from "@/types";
 type ChatPanelPayload = {
   room: Room;
   isOpen: boolean;
-  onToggle: boolean;
 };
 
-export default function ChatPanel({
-  room,
-  isOpen,
-  onToggle,
-}: ChatPanelPayload) {
+export default function ChatPanel({ room, isOpen }: ChatPanelPayload) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [user, setUser] = useState(null);
@@ -23,6 +18,7 @@ export default function ChatPanel({
   const messagesEndRef = useRef(null);
   const pollingRef = useRef(null);
 
+  function onToggle() {}
   useEffect(() => {
     const getUser = async () => {
       // try {
