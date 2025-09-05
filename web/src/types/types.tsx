@@ -1,15 +1,21 @@
-type Room = {
+export type Canvas = {
+  width: number;
+  height: number;
+};
+
+export type Room = {
   id: string;
   name: string;
   description: string;
+  canvas: Canvas;
 };
 
-type User = {
+export type User = {
   id: string;
   name: string;
 };
 
-type Message = {
+export type Message = {
   id: string;
   content: string;
   sender: string;

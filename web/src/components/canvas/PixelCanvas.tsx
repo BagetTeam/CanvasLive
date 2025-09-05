@@ -1,7 +1,14 @@
+import { Room } from "@/types/types";
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { PixelData } from "@/entities/PixelData";
 
-export default function PixelCanvas({ room, selectedColor, onPixelPlace }) {
+type PixelCanvasPayload = {
+  room: Room | undefined;
+  selectedColor: string;
+};
+export default function PixelCanvas({
+  room,
+  selectedColor,
+}: PixelCanvasPayload) {
   const canvasRef = useRef(null);
   const [pixels, setPixels] = useState({});
   const [zoom, setZoom] = useState(8);
@@ -10,9 +17,11 @@ export default function PixelCanvas({ room, selectedColor, onPixelPlace }) {
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 });
   const [isLoading, setIsLoading] = useState(true);
 
-  const CANVAS_WIDTH = room?.canvas_width || 100;
-  const CANVAS_HEIGHT = room?.canvas_height || 100;
+  const CANVAS_WIDTH = room?.canvas.width || 100;
+  const CANVAS_HEIGHT = room?.canvas.width || 100;
   const PIXEL_SIZE = zoom;
+
+  function onPixelPlace() {}
 
   // Load existing pixels for the room
   useEffect(() => {
