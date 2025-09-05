@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Input } from "./ui/input";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@heroui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
