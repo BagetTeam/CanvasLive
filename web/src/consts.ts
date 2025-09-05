@@ -8,6 +8,9 @@ export const defaultRoom: Room = {
     width: 100,
     height: 100,
   },
+  participants: 0,
+  date: new Date(),
+  last_updated: new Date(),
 };
 
 export const COLORS = [

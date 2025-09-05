@@ -10,6 +10,7 @@ export type Room = {
   canvas: Canvas;
   participants: number; // can be changed to user list
   date: Date;
+  last_updated: Date;
 };
 
 export type User = {
