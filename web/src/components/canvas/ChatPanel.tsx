@@ -66,10 +66,10 @@ export default function ChatPanel({
     // messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = (e: string) => {
-    setNewMessage(e);
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    setNewMessage("");
     return;
-    // e.preventDefault();
     // if (!newMessage.trim() || !room?.id || !user || isLoading) return;
     // setIsLoading(true);
     // try {
@@ -156,7 +156,7 @@ export default function ChatPanel({
 
             {/* Message input */}
             <form
-              onSubmit={handleSendMessage(newMessage)}
+              onSubmit={handleSendMessage}
               className="p-4 border-t border-gray-700"
             >
               <div className="flex gap-2">
