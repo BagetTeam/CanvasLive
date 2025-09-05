@@ -29,16 +29,16 @@ export default function PixelCanvas({
 
     const loadPixels = async () => {
       setIsLoading(true);
-      try {
-        const pixelData = await PixelData.filter({ room_id: room.id });
-        const pixelMap = {};
-        pixelData.forEach((pixel) => {
-          pixelMap[`${pixel.x}-${pixel.y}`] = pixel.color;
-        });
-        setPixels(pixelMap);
-      } catch (error) {
-        console.error("Error loading pixels:", error);
-      }
+      // try {
+      //   const pixelData = await PixelData.filter({ room_id: room.id });
+      //   const pixelMap = {};
+      //   pixelData.forEach((pixel) => {
+      //     pixelMap[`${pixel.x}-${pixel.y}`] = pixel.color;
+      //   });
+      //   setPixels(pixelMap);
+      // } catch (error) {
+      //   console.error("Error loading pixels:", error);
+      // }
       setIsLoading(false);
     };
 
@@ -46,134 +46,122 @@ export default function PixelCanvas({
   }, [room?.id]);
 
   // Draw canvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+  // useEffect(() => {
+  // const canvas = canvasRef.current;
+  // if (!canvas) return;
+  // const ctx = canvas.getContext("2d");
+  // const width = canvas.width;
+  // const height = canvas.height;
+  // // Clear canvas
+  // ctx.fillStyle = "#1a1a1a";
+  // ctx.fillRect(0, 0, width, height);
+  // // Draw grid
+  // ctx.strokeStyle = "#333";
+  // ctx.lineWidth = 0.5;
+  // for (let x = 0; x <= CANVAS_WIDTH; x++) {
+  //   const screenX = x * PIXEL_SIZE + pan.x;
+  //   if (screenX >= -PIXEL_SIZE && screenX <= width + PIXEL_SIZE) {
+  //     ctx.beginPath();
+  //     ctx.moveTo(screenX, 0);
+  //     ctx.lineTo(screenX, height);
+  //     ctx.stroke();
+  //   }
+  // }
+  // for (let y = 0; y <= CANVAS_HEIGHT; y++) {
+  //   const screenY = y * PIXEL_SIZE + pan.y;
+  //   if (screenY >= -PIXEL_SIZE && screenY <= height + PIXEL_SIZE) {
+  //     ctx.beginPath();
+  //     ctx.moveTo(0, screenY);
+  //     ctx.lineTo(width, screenY);
+  //     ctx.stroke();
+  //   }
+  // }
+  // // Draw pixels
+  // Object.entries(pixels).forEach(([coord, color]) => {
+  //   const [x, y] = coord.split("-").map(Number);
+  //   const screenX = x * PIXEL_SIZE + pan.x;
+  //   const screenY = y * PIXEL_SIZE + pan.y;
+  //   if (
+  //     screenX >= -PIXEL_SIZE &&
+  //     screenX <= width + PIXEL_SIZE &&
+  //     screenY >= -PIXEL_SIZE &&
+  //     screenY <= height + PIXEL_SIZE
+  //   ) {
+  //     ctx.fillStyle = color;
+  //     ctx.fillRect(screenX, screenY, PIXEL_SIZE, PIXEL_SIZE);
+  //   }
+  // });
+  // }, [pixels, zoom, pan, CANVAS_WIDTH, CANVAS_HEIGHT, PIXEL_SIZE]);
 
-    const ctx = canvas.getContext("2d");
-    const width = canvas.width;
-    const height = canvas.height;
+  // const getCanvasCoordinates = useCallback(
+  // (clientX, clientY) => {
+  //   const canvas = canvasRef.current;
+  //   if (!canvas) return null;
 
-    // Clear canvas
-    ctx.fillStyle = "#1a1a1a";
-    ctx.fillRect(0, 0, width, height);
+  //   const rect = canvas.getBoundingClientRect();
+  //   const x = Math.floor((clientX - rect.left - pan.x) / PIXEL_SIZE);
+  //   const y = Math.floor((clientY - rect.top - pan.y) / PIXEL_SIZE);
 
-    // Draw grid
-    ctx.strokeStyle = "#333";
-    ctx.lineWidth = 0.5;
+  //   if (x >= 0 && x < CANVAS_WIDTH && y >= 0 && y < CANVAS_HEIGHT) {
+  //     return { x, y };
+  //   }
+  //   return null;
+  // },
+  //   [pan, PIXEL_SIZE, CANVAS_WIDTH, CANVAS_HEIGHT]
+  // );
 
-    for (let x = 0; x <= CANVAS_WIDTH; x++) {
-      const screenX = x * PIXEL_SIZE + pan.x;
-      if (screenX >= -PIXEL_SIZE && screenX <= width + PIXEL_SIZE) {
-        ctx.beginPath();
-        ctx.moveTo(screenX, 0);
-        ctx.lineTo(screenX, height);
-        ctx.stroke();
-      }
-    }
+  // const handleCanvasClick = async (e) => {
+  // if (isDragging) return;
+  // const coords = getCanvasCoordinates(e.clientX, e.clientY);
+  // if (!coords || !selectedColor || !room?.id) return;
+  // const key = `${coords.x}-${coords.y}`;
+  // // Optimistic update
+  // setPixels((prev) => ({ ...prev, [key]: selectedColor }));
+  // try {
+  //   // Save to database
+  //   await PixelData.create({
+  //     room_id: room.id,
+  //     x: coords.x,
+  //     y: coords.y,
+  //     color: selectedColor,
+  //   });
+  //   onPixelPlace?.(coords.x, coords.y, selectedColor);
+  // } catch (error) {
+  //   console.error("Error placing pixel:", error);
+  //   // Revert optimistic update
+  //   setPixels((prev) => {
+  //     const newPixels = { ...prev };
+  //     delete newPixels[key];
+  //     return newPixels;
+  //   });
+  // }
+  // };
 
-    for (let y = 0; y <= CANVAS_HEIGHT; y++) {
-      const screenY = y * PIXEL_SIZE + pan.y;
-      if (screenY >= -PIXEL_SIZE && screenY <= height + PIXEL_SIZE) {
-        ctx.beginPath();
-        ctx.moveTo(0, screenY);
-        ctx.lineTo(width, screenY);
-        ctx.stroke();
-      }
-    }
+  // const handleMouseDown = (e) => {
+  //   setIsDragging(false);
+  //   setLastMousePos({ x: e.clientX, y: e.clientY });
+  // };
 
-    // Draw pixels
-    Object.entries(pixels).forEach(([coord, color]) => {
-      const [x, y] = coord.split("-").map(Number);
-      const screenX = x * PIXEL_SIZE + pan.x;
-      const screenY = y * PIXEL_SIZE + pan.y;
+  // const handleMouseMove = (e) => {
+  //   const deltaX = e.clientX - lastMousePos.x;
+  //   const deltaY = e.clientY - lastMousePos.y;
 
-      if (
-        screenX >= -PIXEL_SIZE &&
-        screenX <= width + PIXEL_SIZE &&
-        screenY >= -PIXEL_SIZE &&
-        screenY <= height + PIXEL_SIZE
-      ) {
-        ctx.fillStyle = color;
-        ctx.fillRect(screenX, screenY, PIXEL_SIZE, PIXEL_SIZE);
-      }
-    });
-  }, [pixels, zoom, pan, CANVAS_WIDTH, CANVAS_HEIGHT, PIXEL_SIZE]);
+  //   if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
+  //     setIsDragging(true);
+  //     setPan((prev) => ({
+  //       x: prev.x + deltaX,
+  //       y: prev.y + deltaY,
+  //     }));
+  //   }
 
-  const getCanvasCoordinates = useCallback(
-    (clientX, clientY) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return null;
+  //   setLastMousePos({ x: e.clientX, y: e.clientY });
+  // };
 
-      const rect = canvas.getBoundingClientRect();
-      const x = Math.floor((clientX - rect.left - pan.x) / PIXEL_SIZE);
-      const y = Math.floor((clientY - rect.top - pan.y) / PIXEL_SIZE);
-
-      if (x >= 0 && x < CANVAS_WIDTH && y >= 0 && y < CANVAS_HEIGHT) {
-        return { x, y };
-      }
-      return null;
-    },
-    [pan, PIXEL_SIZE, CANVAS_WIDTH, CANVAS_HEIGHT]
-  );
-
-  const handleCanvasClick = async (e) => {
-    if (isDragging) return;
-
-    const coords = getCanvasCoordinates(e.clientX, e.clientY);
-    if (!coords || !selectedColor || !room?.id) return;
-
-    const key = `${coords.x}-${coords.y}`;
-
-    // Optimistic update
-    setPixels((prev) => ({ ...prev, [key]: selectedColor }));
-
-    try {
-      // Save to database
-      await PixelData.create({
-        room_id: room.id,
-        x: coords.x,
-        y: coords.y,
-        color: selectedColor,
-      });
-
-      onPixelPlace?.(coords.x, coords.y, selectedColor);
-    } catch (error) {
-      console.error("Error placing pixel:", error);
-      // Revert optimistic update
-      setPixels((prev) => {
-        const newPixels = { ...prev };
-        delete newPixels[key];
-        return newPixels;
-      });
-    }
-  };
-
-  const handleMouseDown = (e) => {
-    setIsDragging(false);
-    setLastMousePos({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleMouseMove = (e) => {
-    const deltaX = e.clientX - lastMousePos.x;
-    const deltaY = e.clientY - lastMousePos.y;
-
-    if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-      setIsDragging(true);
-      setPan((prev) => ({
-        x: prev.x + deltaX,
-        y: prev.y + deltaY,
-      }));
-    }
-
-    setLastMousePos({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleWheel = (e) => {
-    e.preventDefault();
-    const delta = e.deltaY > 0 ? -1 : 1;
-    setZoom((prev) => Math.max(2, Math.min(20, prev + delta)));
-  };
+  // const handleWheel = (e) => {
+  //   e.preventDefault();
+  //   const delta = e.deltaY > 0 ? -1 : 1;
+  //   setZoom((prev) => Math.max(2, Math.min(20, prev + delta)));
+  // };
 
   if (isLoading) {
     return (
@@ -190,10 +178,10 @@ export default function PixelCanvas({
         width={800}
         height={600}
         className="cursor-crosshair select-none"
-        onClick={handleCanvasClick}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onWheel={handleWheel}
+        // onClick={handleCanvasClick}
+        // onMouseDown={handleMouseDown}
+        // onMouseMove={handleMouseMove}
+        // onWheel={handleWheel}
         style={{ width: "100%", height: "100%" }}
       />
 
