@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, Share } from "lucide-react";
 import PixelCanvas from "@/components/PixelCanvas";
 import ChatPanel from "@/components/ChatPanel";
+import { testRooms } from "@/lib/test_data";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -27,7 +28,11 @@ export default async function Page({ params, searchParams }: PageProps) {
   if (!selectedRoom) {
     const FetchRoom = () => {
       // TODO CHANGE THIS TO FETCH DATABASE
-
+      testRooms.forEach((r) => {
+        if (r.id === roomId) {
+          return r;
+        }
+      });
       return defaultRoom;
     };
 
@@ -168,4 +173,7 @@ export default async function Page({ params, searchParams }: PageProps) {
       />
     </div>
   );
+}
+function foreach(room: Room) {
+  throw new Error("Function not implemented.");
 }
