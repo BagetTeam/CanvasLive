@@ -14,6 +14,7 @@ import { Plus, Users, Palette } from "lucide-react";
 import { Room } from "@/lib/types";
 import { defaultRoom } from "@/lib/consts";
 import { useRouter } from "next/navigation";
+import { testRooms } from "@/lib/test_data";
 
 export default function Canvas() {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -34,6 +35,9 @@ export default function Canvas() {
     // } catch (error) {
     //   console.error("Error loading rooms:", error);
     // }
+    // !!! TO REMOVE
+    setRooms(testRooms);
+
     setIsLoading(false);
   };
 

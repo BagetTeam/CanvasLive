@@ -26,6 +26,8 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   if (!selectedRoom) {
     const FetchRoom = () => {
+      // TODO CHANGE THIS TO FETCH DATABASE
+
       return defaultRoom;
     };
 

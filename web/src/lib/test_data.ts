@@ -1,6 +1,6 @@
 import { Room } from "./types";
 
-const Rooms: Room[] = [
+export const testRooms: Room[] = [
   {
     id: "1",
     name: "Test 1",
