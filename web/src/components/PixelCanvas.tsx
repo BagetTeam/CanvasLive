@@ -4,10 +4,12 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 type PixelCanvasPayload = {
   room: Room | undefined;
   selectedColor: string;
+  onPixelPlace: (x: number, y: number, color: string) => void;
 };
 export default function PixelCanvas({
   room,
   selectedColor,
+  onPixelPlace,
 }: PixelCanvasPayload) {
   const canvasRef = useRef(null);
   const [pixels, setPixels] = useState({});
@@ -20,8 +22,6 @@ export default function PixelCanvas({
   const CANVAS_WIDTH = room?.canvas.width || 100;
   const CANVAS_HEIGHT = room?.canvas.width || 100;
   const PIXEL_SIZE = zoom;
-
-  function onPixelPlace() {}
 
   // Load existing pixels for the room
   useEffect(() => {

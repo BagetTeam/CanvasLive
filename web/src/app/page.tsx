@@ -1,152 +1,263 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@radix-ui/themes";
-import { ArrowLeft, Download, Share } from "lucide-react";
-
-import RoomSelector from "@/components/RoomSelector";
-import PixelCanvas from "@/components/PixelCanvas";
-import ColorPalette from "@/components/ColorPalette";
-import ChatPanel from "@/components/ChatPanel";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Plus, Users, Palette } from "lucide-react";
 import { Room } from "@/types";
+import { defaultRoom } from "@/consts";
+import { useRouter } from "next/navigation";
 
 export default function Canvas() {
-  const [selectedRoom, setSelectedRoom] = useState<Room | undefined>(undefined);
-  const [selectedColor, setSelectedColor] = useState("#FF0000");
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isGeneratingSnapshot, setIsGeneratingSnapshot] = useState(false);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [newRoom, setNewRoom] = useState<Room>(defaultRoom);
 
-  if (!selectedRoom) {
-    return <RoomSelector setSelectedRoom={setSelectedRoom} />;
+  const router = useRouter();
+  useEffect(() => {
+    loadRooms();
+  }, []);
+
+  const loadRooms = async () => {
+    setIsLoading(true);
+    // try {
+    //   const roomList = await Room.list("-created_date");
+    //   setRooms(roomList);
+    // } catch (error) {
+    //   console.error("Error loading rooms:", error);
+    // }
+    setIsLoading(false);
+  };
+
+  function onRoomSelect(room: Room) {
+    router.push(`/room/${room.id}`);
   }
 
-  const handleBackToRooms = () => {
-    setSelectedRoom(null);
-    setIsChatOpen(false);
-  };
+  const handleCreateRoom = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // if (!newRoom.name.trim()) return;
 
-  const handlePixelPlace = (x, y, color) => {
-    // This can be used for analytics or real-time features
-    console.log(`Pixel placed at ${x},${y} with color ${color}`);
-  };
-
-  const handleCreateSnapshot = async () => {
-    // setIsGeneratingSnapshot(true);
     // try {
-    //   // Generate a snapshot image of the current canvas
-    //   const result = await GenerateImage({
-    //     prompt: `Create a pixel art representation of a collaborative canvas named "${selectedRoom.name}". The image should look like a retro pixel art game with vibrant colors on a grid. Include some random colorful pixels placed by users in an artistic pattern.`,
+    //   const created = await Room.create(newRoom);
+    //   setRooms((prev) => [created, ...prev]);
+    //   setShowCreateDialog(false);
+    //   setNewRoom({
+    //     name: "",
+    //     description: "",
+    //     canvas_width: 100,
+    //     canvas_height: 100,
     //   });
-
-    //   if (result.url) {
-    //     await CanvasSnapshot.create({
-    //       room_id: selectedRoom.id,
-    //       name: `${selectedRoom.name} - ${new Date().toLocaleDateString()}`,
-    //       image_url: result.url,
-    //       pixel_count: Math.floor(Math.random() * 500) + 100,
-    //       contributors: Math.floor(Math.random() * 20) + 5,
-    //     });
-
-    //     // Open the generated image in a new tab
-    //     window.open(result.url, "_blank");
-    //   }
+    //   onRoomSelect(created);
     // } catch (error) {
-    //   console.error("Error creating snapshot:", error);
+    //   console.error("Error creating room:", error);
     // }
-    setIsGeneratingSnapshot(false);
   };
 
-  const handleShare = async () => {
-    const shareUrl = window.location.href;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: `PixelCanvas - ${selectedRoom.name}`,
-          text: "Join me in creating collaborative pixel art!",
-          url: shareUrl,
-        });
-      } catch (error) {
-        console.log("Error sharing:", error);
-      }
-    } else {
-      // Fallback to clipboard
-      navigator.clipboard.writeText(shareUrl);
-      alert("Room link copied to clipboard!");
-    }
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-cyan-900 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-screen flex bg-gray-900 overflow-hidden">
-      {/* Color Palette */}
-      <ColorPalette
-        selectedColor={selectedColor}
-        onColorSelect={setSelectedColor}
-      />
-
-      {/* Main Canvas Area */}
-      <div className="flex-1 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-cyan-900 p-6">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between"
+          className="text-center mb-12"
         >
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBackToRooms}
-              className="text-gray-400 hover:text-white"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Rooms
-            </Button>
-            <div>
-              <h2 className="text-white text-lg font-semibold">
-                {selectedRoom.name}
-              </h2>
-              <p className="text-gray-400 text-sm">
-                {selectedRoom.canvas_width} × {selectedRoom.canvas_height}{" "}
-                canvas
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleCreateSnapshot}
-              disabled={isGeneratingSnapshot}
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              {isGeneratingSnapshot ? "Creating..." : "Snapshot"}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShare}
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
-            >
-              <Share className="w-4 h-4 mr-2" />
-              Share
-            </Button>
-          </div>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4">
+            PixelCanvas
+          </h1>
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            Join collaborative pixel art rooms and create beautiful artwork
+            together with people around the world
+          </p>
         </motion.div>
 
-        {/* Canvas */}
-        <PixelCanvas
-          room={selectedRoom}
-          selectedColor={selectedColor}
-          onPixelPlace={handlePixelPlace}
-        />
+        {/* Create Room Button */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="flex justify-center mb-8"
+        >
+          <Button
+            onClick={() => setShowCreateDialog(true)}
+            className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700 text-white px-8 py-3 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Create New Canvas Room
+          </Button>
+        </motion.div>
+
+        {/* Rooms Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <AnimatePresence>
+            {rooms.map((room, index) => (
+              <motion.div
+                key={room.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                className="cursor-pointer"
+                onClick={() => onRoomSelect(room)}
+              >
+                <Card className="bg-gray-800/50 border-gray-700 hover:border-cyan-400/50 transition-all duration-300 backdrop-blur-sm">
+                  <CardHeader>
+                    <CardTitle className="text-white flex items-center gap-2">
+                      <Palette className="w-5 h-5 text-cyan-400" />
+                      {room.name}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-300 text-sm mb-3">
+                      {room.description || "A collaborative pixel art canvas"}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-gray-400">
+                      <span className="flex items-center gap-1">
+                        <Users className="w-3 h-3" />
+                        {room.participants || 0} online
+                      </span>
+                      <span>
+                        {room.canvas.width}×{room.canvas.height}
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-2">
+                      Created {room.date?.toLocaleDateString() || "Unknown"}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+
+        {rooms.length === 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-12"
+          >
+            <Palette className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-xl text-gray-400 mb-2">No canvas rooms yet</h3>
+            <p className="text-gray-500">
+              Create the first collaborative canvas room!
+            </p>
+          </motion.div>
+        )}
       </div>
 
-      {/* Chat Panel */}
-      <ChatPanel
-        room={selectedRoom}
-        isOpen={isChatOpen}
-        onToggle={() => setIsChatOpen(!isChatOpen)}
-      />
+      {/* Create Room Dialog */}
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="bg-gray-800 border-gray-700 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-xl bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
+              Create New Canvas Room
+            </DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleCreateRoom} className="space-y-4">
+            <div>
+              <label className="text-sm text-gray-300 mb-1 block">
+                Room Name
+              </label>
+              <Input
+                value={newRoom.name}
+                onChange={(e) =>
+                  setNewRoom((prev) => ({ ...prev, name: e.target.value }))
+                }
+                placeholder="Enter room name..."
+                className="bg-gray-700 border-gray-600 text-white"
+                required
+              />
+            </div>
+            <div>
+              <label className="text-sm text-gray-300 mb-1 block">
+                Description (optional)
+              </label>
+              <textarea
+                value={newRoom.description}
+                onChange={(e) =>
+                  setNewRoom((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                placeholder="What's this canvas for?"
+                className="bg-gray-700 border-gray-600 text-white resize-none"
+                rows={3}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">
+                  Width
+                </label>
+                <Input
+                  type="number"
+                  min="50"
+                  max="200"
+                  value={newRoom.canvas.width}
+                  onChange={(e) =>
+                    setNewRoom((prev) => ({
+                      ...prev,
+                      canvas_width: parseInt(e.target.value),
+                    }))
+                  }
+                  className="bg-gray-700 border-gray-600 text-white"
+                />
+              </div>
+              <div>
+                <label className="text-sm text-gray-300 mb-1 block">
+                  Height
+                </label>
+                <Input
+                  type="number"
+                  min="50"
+                  max="200"
+                  value={newRoom.canvas.height}
+                  onChange={(e) =>
+                    setNewRoom((prev) => ({
+                      ...prev,
+                      canvas_height: parseInt(e.target.value),
+                    }))
+                  }
+                  className="bg-gray-700 border-gray-600 text-white"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowCreateDialog(false)}
+                className="border-gray-600 text-gray-300 hover:bg-gray-700"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
+              >
+                Create Room
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

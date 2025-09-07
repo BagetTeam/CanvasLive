@@ -1,15 +1,16 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { motion } from "framer-motion";
 import { COLORS } from "@/consts";
 
 type ColorPalettePayload = {
   selectedColor: string;
+  onColorSelect: Dispatch<SetStateAction<string>>;
 };
 
-export default function ColorPalette({ selectedColor }: ColorPalettePayload) {
-  function onColorSelect(color: string) {
-    // handle color change
-  }
+export default function ColorPalette({
+  selectedColor,
+  onColorSelect,
+}: ColorPalettePayload) {
   return (
     <div className="bg-gray-800 border-r border-gray-700 p-4 w-20 flex flex-col">
       <h3 className="text-white text-sm font-semibold mb-4 text-center">

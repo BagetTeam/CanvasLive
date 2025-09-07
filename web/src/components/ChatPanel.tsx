@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, SetStateAction } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Send, MessageSquare } from "lucide-react";
@@ -8,9 +8,14 @@ import { Message, Room } from "@/types";
 type ChatPanelPayload = {
   room: Room;
   isOpen: boolean;
+  onToggle: () => void;
 };
 
-export default function ChatPanel({ room, isOpen }: ChatPanelPayload) {
+export default function ChatPanel({
+  room,
+  isOpen,
+  onToggle,
+}: ChatPanelPayload) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [user, setUser] = useState(null);
@@ -18,7 +23,6 @@ export default function ChatPanel({ room, isOpen }: ChatPanelPayload) {
   const messagesEndRef = useRef(null);
   const pollingRef = useRef(null);
 
-  function onToggle() {}
   useEffect(() => {
     const getUser = async () => {
       // try {

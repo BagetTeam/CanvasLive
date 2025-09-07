@@ -1,6 +1,13 @@
 import { defaultRoom } from "@/consts";
 import { Room } from "@/types";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import ColorPalette from "@/components/ColorPalette";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Download, Share } from "lucide-react";
+import PixelCanvas from "@/components/PixelCanvas";
+import ChatPanel from "@/components/ChatPanel";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -10,6 +17,8 @@ interface PageProps {
 export default async function Page({ params, searchParams }: PageProps) {
   const { id: roomId } = await params;
   const query = await searchParams;
+  const router = useRouter();
+
   const [selectedRoom, setSelectedRoom] = useState<Room | undefined>(undefined);
   const [selectedColor, setSelectedColor] = useState("#FF0000");
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -29,11 +38,10 @@ export default async function Page({ params, searchParams }: PageProps) {
   }
 
   const handleBackToRooms = () => {
-    setSelectedRoom(null);
-    setIsChatOpen(false);
+    router.push("/");
   };
 
-  const handlePixelPlace = (x, y, color) => {
+  const handlePixelPlace = (x: number, y: number, color: string) => {
     // This can be used for analytics or real-time features
     console.log(`Pixel placed at ${x},${y} with color ${color}`);
   };
@@ -69,7 +77,7 @@ export default async function Page({ params, searchParams }: PageProps) {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `PixelCanvas - ${selectedRoom.name}`,
+          title: `PixelCanvas - ${selectedRoom!.name}`,
           text: "Join me in creating collaborative pixel art!",
           url: shareUrl,
         });
@@ -111,10 +119,10 @@ export default async function Page({ params, searchParams }: PageProps) {
             </Button>
             <div>
               <h2 className="text-white text-lg font-semibold">
-                {selectedRoom.name}
+                {selectedRoom?.name}
               </h2>
               <p className="text-gray-400 text-sm">
-                {selectedRoom.canvas_width} × {selectedRoom.canvas_height}{" "}
+                {selectedRoom?.canvas.width} × {selectedRoom?.canvas.width}{" "}
                 canvas
               </p>
             </div>
@@ -152,7 +160,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
       {/* Chat Panel */}
       <ChatPanel
-        room={selectedRoom}
+        room={selectedRoom!}
         isOpen={isChatOpen}
         onToggle={() => setIsChatOpen(!isChatOpen)}
       />
