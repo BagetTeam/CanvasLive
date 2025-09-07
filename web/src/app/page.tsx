@@ -7,9 +7,10 @@ import RoomSelector from "@/components/RoomSelector";
 import PixelCanvas from "@/components/PixelCanvas";
 import ColorPalette from "@/components/ColorPalette";
 import ChatPanel from "@/components/ChatPanel";
+import { Room } from "@/types";
 
 export default function Canvas() {
-  const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedRoom, setSelectedRoom] = useState<Room | undefined>(undefined);
   const [selectedColor, setSelectedColor] = useState("#FF0000");
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isGeneratingSnapshot, setIsGeneratingSnapshot] = useState(false);
@@ -29,28 +30,28 @@ export default function Canvas() {
   };
 
   const handleCreateSnapshot = async () => {
-    setIsGeneratingSnapshot(true);
-    try {
-      // Generate a snapshot image of the current canvas
-      const result = await GenerateImage({
-        prompt: `Create a pixel art representation of a collaborative canvas named "${selectedRoom.name}". The image should look like a retro pixel art game with vibrant colors on a grid. Include some random colorful pixels placed by users in an artistic pattern.`,
-      });
+    // setIsGeneratingSnapshot(true);
+    // try {
+    //   // Generate a snapshot image of the current canvas
+    //   const result = await GenerateImage({
+    //     prompt: `Create a pixel art representation of a collaborative canvas named "${selectedRoom.name}". The image should look like a retro pixel art game with vibrant colors on a grid. Include some random colorful pixels placed by users in an artistic pattern.`,
+    //   });
 
-      if (result.url) {
-        await CanvasSnapshot.create({
-          room_id: selectedRoom.id,
-          name: `${selectedRoom.name} - ${new Date().toLocaleDateString()}`,
-          image_url: result.url,
-          pixel_count: Math.floor(Math.random() * 500) + 100,
-          contributors: Math.floor(Math.random() * 20) + 5,
-        });
+    //   if (result.url) {
+    //     await CanvasSnapshot.create({
+    //       room_id: selectedRoom.id,
+    //       name: `${selectedRoom.name} - ${new Date().toLocaleDateString()}`,
+    //       image_url: result.url,
+    //       pixel_count: Math.floor(Math.random() * 500) + 100,
+    //       contributors: Math.floor(Math.random() * 20) + 5,
+    //     });
 
-        // Open the generated image in a new tab
-        window.open(result.url, "_blank");
-      }
-    } catch (error) {
-      console.error("Error creating snapshot:", error);
-    }
+    //     // Open the generated image in a new tab
+    //     window.open(result.url, "_blank");
+    //   }
+    // } catch (error) {
+    //   console.error("Error creating snapshot:", error);
+    // }
     setIsGeneratingSnapshot(false);
   };
 
