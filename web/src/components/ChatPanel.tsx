@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "./ui/button";
 import { Send, MessageSquare } from "lucide-react";
 import { Input } from "./ui/input";
-import { Message, Room } from "@/types";
+import { Message, Room } from "@/lib/types";
 
 type ChatPanelPayload = {
   room: Room;

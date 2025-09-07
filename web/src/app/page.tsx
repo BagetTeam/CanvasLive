@@ -11,8 +11,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Plus, Users, Palette } from "lucide-react";
-import { Room } from "@/types";
-import { defaultRoom } from "@/consts";
+import { Room } from "@/lib/types";
+import { defaultRoom } from "@/lib/consts";
 import { useRouter } from "next/navigation";
 
 export default function Canvas() {
