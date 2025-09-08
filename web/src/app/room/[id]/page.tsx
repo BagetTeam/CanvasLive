@@ -1,3 +1,5 @@
+"use client";
+
 import { defaultRoom } from "@/lib/consts";
 import { Room } from "@/lib/types";
 import { useState } from "react";

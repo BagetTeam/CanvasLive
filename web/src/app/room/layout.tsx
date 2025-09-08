@@ -3,5 +3,5 @@ export default function RoomLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return { children };
+  return <>{children}</>;
 }
